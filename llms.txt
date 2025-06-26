@@ -1,0 +1,84 @@
+# Crate Documentation
+
+**Version:** 1.0.0
+
+**Format Version:** 43
+
+# Module `web_service_uptime_axum`
+
+# Web service uptime axum
+ 
+**[documentation](https://docs.rs/web-service-uptime-axum/)**
+•
+**[source](https://github.com/joelparkerhenderson/web-service-uptime-axum/)**
+•
+**[llms.txt](https://raw.githubusercontent.com/joelparkerhenderson/web-service-uptime-axum/refs/heads/main/llms.txt)**
+•
+**[crate](https://crates.io/crates/web-service-uptime-axum)**
+•
+**[email](mailto:joel@joelparkerhenderson.com)**
+
+Web service that displays the program uptime by using Axum, Tokio, Rust.
+ 
+This is a very simple web service that we use for testing our systems.
+ 
+## Steps
+ 
+Run the service on host 0.0.0.0 port 3000 or wherever you wish:
+ 
+```sh
+cargo run -- "0.0.0.0:3000"
+```
+ 
+Browse <https://localhost:3000>
+ 
+You should see a web page that displays the uptime in seconds.
+ 
+## References
+ 
+Based on Demo Rust Axum free open source software:
+<https://github.com/joelparkerhenderson/demo-rust-axum>
+ 
+
+## Functions
+
+### Function `main`
+
+```rust
+pub(crate) fn main() { /* ... */ }
+```
+
+### Function `shutdown_signal`
+
+```rust
+pub async fn shutdown_signal() { /* ... */ }
+```
+
+### Function `fallback`
+
+axum handler for any request that fails to match the router routes.
+This implementation returns HTTP status code Not Found (404).
+
+```rust
+pub async fn fallback(uri: axum::http::Uri) -> impl axum::response::IntoResponse { /* ... */ }
+```
+
+### Function `uptime`
+
+axum handler for "GET /uptime" which shows the program's uptime duration.
+This shows how to write a handler that uses a global static lazy value.
+
+```rust
+pub async fn uptime() -> String { /* ... */ }
+```
+
+## Constants and Statics
+
+### Static `INSTANT`
+
+Create the constant INSTANT so the program can track its own uptime.
+
+```rust
+pub static INSTANT: std::sync::LazyLock<std::time::Instant> = _;
+```
+
