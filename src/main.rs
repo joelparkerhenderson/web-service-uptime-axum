@@ -26,14 +26,17 @@
 //! 
 //! You should see a web page that displays the uptime in seconds.
 //! 
+//! Wait a little bit, then use your browser to reload the web page.
+//! 
+//! You should see the uptime increase a little bit.
+//! 
 //! ## References
 //! 
 //! Based on Demo Rust Axum free open source software:
 //! <https://github.com/joelparkerhenderson/demo-rust-axum>
 //! 
 
-/// Use axum capabilities.
-use axum::routing::get;
+mod app;
 
 /// Use tracing crates for application-level tracing output.
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -41,9 +44,14 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 /// Create the constant INSTANT so the program can track its own uptime.
 pub static INSTANT: std::sync::LazyLock<std::time::Instant> = std::sync::LazyLock::new(|| std::time::Instant::now());
 
+/// The main function does these steps: 
+/// - Start tracing and emit a tracing event.
+/// - Get a command line argument as our bind address.
+/// - Create our application which is an axum router.
+/// - Run our application as a hyper server.
 #[tokio::main]  
 async fn main() {
-    // Start tracing.
+    // Start tracing and emit a tracing event.
     tracing_subscriber::registry()
         .with(tracing_subscriber::fmt::layer())
         .init();
@@ -58,12 +66,10 @@ async fn main() {
         None => "0.0.0.0:3000".into(),
     };
 
-    // Build our application by creating our router.
-    let app = axum::Router::new()
-        .fallback(fallback)
-        .route("/", get(uptime));
+    // Create our application which is an axum router.
+    let app = crate::app::app();
 
-    // Run our application as a hyper server on http://localhost:3000.
+    // Run our application as a hyper server.
     let listener = tokio::net::TcpListener::bind(bind_address).await.unwrap();
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal())
@@ -95,16 +101,4 @@ pub async fn shutdown_signal() {
         _ = ctrl_c => {},
         _ = terminate => {},
     }
-}
-
-/// axum handler for any request that fails to match the router routes.
-/// This implementation returns HTTP status code Not Found (404).
-pub async fn fallback(uri: axum::http::Uri) -> impl axum::response::IntoResponse {
-    (axum::http::StatusCode::NOT_FOUND, uri.to_string())
-}
-
-/// axum handler for "GET /uptime" which shows the program's uptime duration.
-/// This shows how to write a handler that uses a global static lazy value.
-pub async fn uptime() -> String {
-    format!("{}", INSTANT.elapsed().as_secs())
 }
