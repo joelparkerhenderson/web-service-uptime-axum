@@ -29,6 +29,8 @@ cargo-build-release:
 	git add --force target/x86_64-unknown-linux-gnu/release/web-service-uptime-axum
 	TARGET_CC=x86_64-unknown-linux-musl cargo build --release --target x86_64-unknown-linux-musl
 	git add --force target/x86_64-unknown-linux-musl/release/web-service-uptime-axum
+	TARGET_CC=armv7-unknown-linux-gnueabihf cargo build --release --target armv7-unknown-linux-gnueabihf
+	git add --force target/x86_64-unknown-linux-musl/release/web-service-uptime-axum	
 
 ##
 # podman-build: Use podman to build the container.

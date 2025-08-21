@@ -3634,7 +3634,7 @@ dependencies = [
 
 [[package]]
 name = "web-service-uptime-axum"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "axum",
  "axum-test",

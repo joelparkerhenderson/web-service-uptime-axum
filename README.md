@@ -23,7 +23,7 @@ Run the service using the default address 0.0.0.0:8080:
 cargo run
 ```
 
-Browse <https://localhost:8080/count>
+Browse <https://localhost:8080/uptime>
 
 You should see a web page that displays the uptime in seconds.
 
